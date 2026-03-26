@@ -1,0 +1,32 @@
+# =========================
+# Keil build output
+# =========================
+*.axf
+*.hex
+*.o
+*.d
+*.crf
+*.map
+*.lnp
+*.lst
+*.dep
+*.sct
+
+# Keil intermediate folders
+Keil/Objects/
+Keil/Listings/
+
+# =========================
+# Keil user-specific files
+# =========================
+*.uvguix.*
+*.uvoptx
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# VS Code (optional)
+.vscode/settings.json
