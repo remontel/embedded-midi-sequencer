@@ -6,3 +6,17 @@
  * It detects key presses, maps them to sequencer step indices, and provides
  * clean step input events to the application.
  */
+
+#include "TM4C123GH6PM.h"
+#include "keypad.h"
+
+void Keypad_Init(void)
+{
+    /* TODO: Configure keypad row/column GPIO pins */
+}
+
+int8_t Keypad_Scan(void)
+{
+    /* TODO: Drive rows, read columns, debounce keypress */
+    return -1;
+}
