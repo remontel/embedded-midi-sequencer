@@ -21,6 +21,7 @@
 #include "timer_seq.h"
 #include "midi_uart.h"
 #include "gpio.h"
+#include "SysTick_Delay.h"
 
 int main(void)
 {
@@ -28,6 +29,7 @@ int main(void)
     GPIO_ProjectInit();
     Buttons_Init();
     Keypad_Init();
+    SysTick_Delay_Init();
     LCD_Init();
     Display7Seg_Init();
     MIDI_UART_Init();
@@ -37,7 +39,8 @@ int main(void)
     /* Initial UI state */
     LCD_Clear();
     LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
-    Display7Seg_ShowNumber(Sequencer_GetBPM());
+    GPIO_ClearAllTrackLEDs();
+    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
 
     while (1)
     {
@@ -55,28 +58,53 @@ int main(void)
         }
 
         /* Transport control */
-        if (Buttons_WasTivaSW2Pressed())
-        {
-            Sequencer_TogglePlay();
+				
+				if (Buttons_WasTivaSW1Pressed())
+				{
+					Sequencer_TogglePlay();
 
-            if (Sequencer_IsPlaying())
-            {
-                TimerSeq_Start();
-            }
-            else
-            {
-                TimerSeq_Stop();
-            }
-        }
-
+					if (Sequencer_IsPlaying())
+						{
+							TimerSeq_Start();
+						}
+				else
+					{
+						TimerSeq_Stop();
+					}
+				}
+				
         /* Track selection */
-        if (Buttons_WasEduBaseSW2Pressed()) { Sequencer_SelectTrack(0U); }
-        if (Buttons_WasEduBaseSW3Pressed()) { Sequencer_SelectTrack(1U); }
-        if (Buttons_WasEduBaseSW4Pressed()) { Sequencer_SelectTrack(2U); }
-        if (Buttons_WasEduBaseSW5Pressed()) { Sequencer_SelectTrack(3U); }
+if (Buttons_WasEduBaseSW5Pressed())
+{
+    Sequencer_SelectTrack(0U);
+    GPIO_ClearAllTrackLEDs();
+    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+}
 
-        /* Update display after track change or step change */
-        LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+if (Buttons_WasEduBaseSW4Pressed())
+{
+    Sequencer_SelectTrack(1U);
+    GPIO_ClearAllTrackLEDs();
+    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+}
+
+if (Buttons_WasEduBaseSW3Pressed())
+{
+    Sequencer_SelectTrack(2U);
+    GPIO_ClearAllTrackLEDs();
+    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+}
+
+if (Buttons_WasEduBaseSW2Pressed())
+{
+    Sequencer_SelectTrack(3U);
+    GPIO_ClearAllTrackLEDs();
+    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+}
 
         /* Update BPM display */
         Display7Seg_ShowNumber(Sequencer_GetBPM());
