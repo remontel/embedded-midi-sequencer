@@ -437,7 +437,11 @@
             <File>
               <FileName>SysTick_Delay.c</FileName>
               <FileType>1</FileType>
+<<<<<<< Updated upstream
               <FilePath>C:\Users\Laptop-4TP86M2\Desktop\425 Final Project\embedded-midi-sequencer-main\src\SysTick_Delay.c</FilePath>
+=======
+              <FilePath>..\src\SysTick_Delay.c</FilePath>
+>>>>>>> Stashed changes
             </File>
           </Files>
         </Group>
@@ -487,7 +491,11 @@
             <File>
               <FileName>SysTick_Delay.h</FileName>
               <FileType>5</FileType>
+<<<<<<< Updated upstream
               <FilePath>C:\Users\Laptop-4TP86M2\Desktop\425 Final Project\embedded-midi-sequencer-main\inc\SysTick_Delay.h</FilePath>
+=======
+              <FilePath>..\inc\SysTick_Delay.h</FilePath>
+>>>>>>> Stashed changes
             </File>
           </Files>
         </Group>

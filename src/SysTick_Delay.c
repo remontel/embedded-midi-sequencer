@@ -1,94 +1,82 @@
 /**
- * @file timer_seq.c
- * @brief Hardware timer implementation for sequencer timing.
+ * @file SysTick_Delay.c
+ *
+ * @brief Source code for the SysTick_Delay driver.
+ *
+ * It provides two blocking functions, SysTick_Delay1ms and SysTick_Delay1us,
+ * to create a delay with a busy-wait loop. It uses the SysTick timer with 
+ * a specified reload value to generate interrupts every 1 us.
+ * 
+ * In addition, it uses the Peripheral Internal Oscillator (PIOSC) 
+ * as the clock source. The PIOSC provides 16 MHz which is then divided by 4. 
+ * The timer is used for creating delays in either microseconds or milliseconds.
+ *
+ * @author Aaron Nanas
  */
 
 #include "TM4C123GH6PM.h"
-#include "timer_seq.h"
-#include "sequencer.h"
+#include "SysTick_Delay.h"
 
-uint32_t timer_ms_elapsed = 0;
-uint32_t timer_step_period_ms = 125;
+// Global variable used to keep track of elapsed time in microseconds
+static uint32_t us_elapsed = 0;
 
-void TimerSeq_Init(uint16_t bpm)
-{
-    /* Enable clock for Timer0 */
-    SYSCTL->RCGCTIMER |= 0x01;
+// Global variable used to keep track of elapsed time in milliseconds
+static uint32_t ms_elapsed = 0;
 
-    /* Disable Timer0A before configuration */
-    TIMER0->CTL &= ~0x01;
+// Global flag used to indicate if milliseconds delay is active
+static uint8_t ms_active = 0;
 
-    /* 16-bit timer configuration */
-    TIMER0->CFG = 0x04;
-
-    /* Periodic mode */
-    TIMER0->TAMR = 0x02;
-
-    /* Prescale 50 MHz to 1 MHz */
-    TIMER0->TAPR = 50 - 1;
-
-    /* 1 ms interval at 1 MHz */
-    TIMER0->TAILR = 1000 - 1;
-
-    /* Clear timeout flag */
-    TIMER0->ICR = 0x01;
-
-    /* Enable timeout interrupt */
-    TIMER0->IMR |= 0x01;
-
-    /* Set priority 2 for Timer0A (IRQ 19) */
-    NVIC->IPR[4] &= ~0xE0000000;
-    NVIC->IPR[4] |= (2 << 29);
-
-    /* Enable IRQ 19 */
-    NVIC->ISER[0] |= (1 << 19);
-
-    TimerSeq_UpdatePeriod(bpm);
-    timer_ms_elapsed = 0;
+void SysTick_Delay_Init(void)
+{	
+	// Set the SysTick timer reload value for 1 us intervals
+	// Each clock cycle is (1 / 4 MHz) = 0.25 us
+	SysTick->LOAD = (4 - 1);
+	
+	// Clear the VAL register by writing any value to it
+	SysTick->VAL = 0;
+	
+	// Enable the SysTick timer and its interrupt
+	// with the Peripheral Internal Oscillator (PIOSC) as the clock source
+	SysTick->CTRL |= 0x03;
 }
 
-void TimerSeq_UpdatePeriod(uint16_t bpm)
+void SysTick_Delay1us(uint32_t delay_in_us)
 {
-    if (bpm == 0U)
-    {
-        bpm = 120U;
-    }
-
-    /* sixteenth-note period in ms */
-    timer_step_period_ms = 60000U / (4U * bpm);
-
-    if (timer_step_period_ms == 0U)
-    {
-        timer_step_period_ms = 1U;
-    }
+	// Reset the global variable, us_elapsed
+	us_elapsed = 0;
+	
+	// Wait until ms_value reaches the specified delay_in_ms
+	while (delay_in_us > us_elapsed);
 }
 
-void TimerSeq_Start(void)
+void SysTick_Delay1ms(uint32_t delay_in_ms)
 {
-    timer_ms_elapsed = 0;
-    TIMER0->ICR = 0x01;
-    TIMER0->CTL |= 0x01;
+	// Reset the global variables, us_elapsed and ms_elapsed
+	us_elapsed = 0;
+	ms_elapsed = 0;
+	
+	// Set the ms_active global flag
+	ms_active = 0x01;
+	
+	// Wait until ms_elapsed reaches the specified delay_in_ms
+	while (delay_in_ms > ms_elapsed);
+	
+	// Reset the ms_active global flag
+	ms_active = 0x00;
 }
 
-void TimerSeq_Stop(void)
+void SysTick_Handler(void)
 {
-    TIMER0->CTL &= ~0x01;
-    timer_ms_elapsed = 0;
-}
-
-void TIMER0A_Handler(void)
-{
-    /* Clear timeout interrupt flag */
-    TIMER0->ICR = 0x01;
-
-    if (Sequencer_IsPlaying())
-    {
-        timer_ms_elapsed++;
-
-        if (timer_ms_elapsed >= timer_step_period_ms)
-        {
-            timer_ms_elapsed = 0;
-            Sequencer_AdvanceStep();
-        }
-    }
+	// Increment the global variable, us_elapsed
+	us_elapsed = us_elapsed + 1;
+	
+	// Check if us_elapsed has reached 1000 (1 millisecond) and if milliseconds delay is active
+	if (us_elapsed == 1000 && (ms_active == 0x01))
+	{
+		// Reset us_elapsed
+		us_elapsed = 0;
+		
+		// Increment ms_elapsed to indicate that 1 millisecond has passed
+		ms_elapsed = ms_elapsed + 1;
+	}
 }
