@@ -31,3 +31,8 @@ Thumbs.db
 # VS Code (optional)
 .vscode/c_cpp_properties.json
 .vscode/settings.json
+
+# =========================
+# docs folder
+# =========================
+docs/
