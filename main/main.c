@@ -25,7 +25,7 @@
 
 int main(void)
 {
-    /* Initialize all project modules */
+    // Initialize all project modules
     GPIO_ProjectInit();
     Buttons_Init();
     Keypad_Init();
@@ -36,7 +36,7 @@ int main(void)
     Sequencer_Init();
     TimerSeq_Init(120U);
 
-    /* Initial UI state */
+    // Initial UI state
     LCD_Clear();
     LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
     GPIO_ClearAllTrackLEDs();
@@ -46,10 +46,10 @@ int main(void)
     {
         int8_t key;
 
-        /* Update button state machine / debounce logic */
+        // Update button state machine / debounce logic
         Buttons_Update();
 
-        /* Scan keypad */
+        // Scan keypad
         key = Keypad_Scan();
         if (key >= 0)
         {
@@ -57,59 +57,58 @@ int main(void)
             LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
         }
 
-        /* Transport control */
+        // Transport control
+        if (Buttons_WasTivaSW1Pressed())
+        {
+            Sequencer_TogglePlay();
+
+            if (Sequencer_IsPlaying())
+                {
+                    TimerSeq_Start();
+                }
+        else
+            {
+                TimerSeq_Stop();
+            }
+        }
 				
-				if (Buttons_WasTivaSW1Pressed())
-				{
-					Sequencer_TogglePlay();
+        // Track selection
+        if (Buttons_WasEduBaseSW5Pressed())
+        {
+            Sequencer_SelectTrack(0U);
+            GPIO_ClearAllTrackLEDs();
+            GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+            LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+        }
 
-					if (Sequencer_IsPlaying())
-						{
-							TimerSeq_Start();
-						}
-				else
-					{
-						TimerSeq_Stop();
-					}
-				}
-				
-        /* Track selection */
-if (Buttons_WasEduBaseSW5Pressed())
-{
-    Sequencer_SelectTrack(0U);
-    GPIO_ClearAllTrackLEDs();
-    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
-    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
-}
+        if (Buttons_WasEduBaseSW4Pressed())
+        {
+            Sequencer_SelectTrack(1U);
+            GPIO_ClearAllTrackLEDs();
+            GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+            LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+        }
 
-if (Buttons_WasEduBaseSW4Pressed())
-{
-    Sequencer_SelectTrack(1U);
-    GPIO_ClearAllTrackLEDs();
-    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
-    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
-}
+        if (Buttons_WasEduBaseSW3Pressed())
+        {
+            Sequencer_SelectTrack(2U);
+            GPIO_ClearAllTrackLEDs();
+            GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+            LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+        }
 
-if (Buttons_WasEduBaseSW3Pressed())
-{
-    Sequencer_SelectTrack(2U);
-    GPIO_ClearAllTrackLEDs();
-    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
-    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
-}
+        if (Buttons_WasEduBaseSW2Pressed())
+        {
+            Sequencer_SelectTrack(3U);
+            GPIO_ClearAllTrackLEDs();
+            GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
+            LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
+        }
 
-if (Buttons_WasEduBaseSW2Pressed())
-{
-    Sequencer_SelectTrack(3U);
-    GPIO_ClearAllTrackLEDs();
-    GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
-    LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
-}
-
-        /* Update BPM display */
+        // Update BPM display
         Display7Seg_ShowNumber(Sequencer_GetBPM());
 
-        /* React to step advancement */
+        // React to step advancement
         if (Sequencer_HasStepAdvanced())
         {
             uint8_t track;
