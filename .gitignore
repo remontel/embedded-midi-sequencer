@@ -33,7 +33,8 @@ Thumbs.db
 .vscode/settings.json
 
 # =========================
-# docs folder
+# misc. files
 # =========================
 docs/
+venv/
 Keil/EventRecorderStub.scvd
