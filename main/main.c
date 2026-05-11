@@ -122,6 +122,7 @@ if (Buttons_WasEduBaseSW2Pressed())
                 if (Sequencer_GetStepState(track, step) != 0U)
                 {
                     MIDI_UART_SendNoteOn(0U, Sequencer_GetMidiNoteForTrack(track), 100U);
+                    MIDI_UART_SendNoteOff(0U, Sequencer_GetMidiNoteForTrack(track), 0U);
                     GPIO_BlinkTrackLED(track);
                 }
             }
