@@ -16,7 +16,7 @@
 #include "midi_uart.h"
 
 #define MIDI_UART_BAUD_RATE 115200U
-#define SYSTEM_CLOCK_HZ     16000000U
+#define SYSTEM_CLOCK_HZ     50000000U
 
 static void MIDI_UART_SetBaudRate(uint32_t baud_rate);
 
