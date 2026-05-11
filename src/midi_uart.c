@@ -21,58 +21,40 @@
 static void MIDI_UART_SetBaudRate(uint32_t baud_rate);
 
 void MIDI_UART_Init(void)
-{
-    /*
-     * Enable clocks for UART0 and GPIO Port A.
-     * UART0 is connected to PA0/PA1.
-     * We only need PA1 for transmit.
-     */
+{   
+    // Enable clocks for UART0 and GPIO Port A.
+    // UART0 is connected to PA0/PA1.
     SYSCTL->RCGCUART |= 0x01;
     SYSCTL->RCGCGPIO |= 0x01;
-
-    /*
-     * Small delay to allow peripheral clocks to stabilize.
-     */
+    
+    // Small delay to allow peripheral clocks to stabilize.
     (void)SYSCTL->RCGCUART;
     (void)SYSCTL->RCGCGPIO;
 
-    /*
-     * Disable UART0 before configuration.
-     */
+    // Disable UART0 before configuration.
     UART0->CTL &= ~0x01;
 
-    /*
-     * Configure PA1 for UART0 TX.
-     *
-     * PA1 alternate function = U0TX.
-     * PCTL value 1 selects UART function.
-     */
+    // Configure PA1 for UART0 TX.
+    // PA1 alternate function = U0TX.
+    // PCTL value 1 selects UART function.
     GPIOA->AFSEL |= 0x02;
     GPIOA->PCTL &= ~0x000000F0;
     GPIOA->PCTL |=  0x00000010;
     GPIOA->DEN   |= 0x02;
     GPIOA->AMSEL &= ~0x02;
 
-    /*
-     * Use system clock for UART.
-     */
+    // Use system clock for UART.
     UART0->CC = 0x00;
 
-    /*
-     * Configure baud rate.
-     */
+    // Configure baud rate.
     MIDI_UART_SetBaudRate(MIDI_UART_BAUD_RATE);
 
-    /*
-     * 8 data bits, no parity, 1 stop bit, FIFO enabled.
-     */
+    // 8 data bits, no parity, 1 stop bit, FIFO enabled.
     UART0->LCRH = 0x70;
 
-    /*
-     * Enable UART0 and TX.
-     * Bit 0 = UART enable
-     * Bit 8 = TX enable
-     */
+    // Enable UART0 and TX.
+    // Bit 0 = UART enable
+    // Bit 8 = TX enable
     UART0->CTL |= 0x101;
 }
 
@@ -103,10 +85,8 @@ static void MIDI_UART_SetBaudRate(uint32_t baud_rate)
 
 void MIDI_UART_SendByte(uint8_t data)
 {
-    /*
-     * Wait while UART transmit FIFO is full.
-     * UARTFR bit 5 = TXFF.
-     */
+     // Wait while UART transmit FIFO is full.
+     // UARTFR bit 5 = TXFF.
     while ((UART0->FR & 0x20) != 0U)
     {
     }
