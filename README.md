@@ -11,8 +11,6 @@ Setup to run the hardware sequencer and trigger sounds in DAW via a serial to MI
 - UART0 TX (PA1) sends MIDI bytes over USB serial
 - Python script converts serial bytes to virtual MIDI (macOS IAC)
 - DAW (Ex. Ableton) receives MIDI and triggers samples
-- `SW1` controls playback
-- `SW2` is reserved for future shift/alternate behavior
 
 
 
