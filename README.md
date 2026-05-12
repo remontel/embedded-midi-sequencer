@@ -39,10 +39,10 @@ Run on board:
 - SW1: Play/Stop
 - SW2: Reserved for future shift functions
 - Keypad: Toggle steps
-- EduBase SW5: Track 1
-- EduBase SW4: Track 2
-- EduBase SW3: Track 3
-- EduBase SW2: Track 4
+- EduBase SW2: Track 1
+- EduBase SW3: Track 2
+- EduBase SW4: Track 3
+- EduBase SW5: Track 4
 
 LCD legend:
 - `X`: active step
@@ -130,9 +130,7 @@ Press play on the sequencer and should hear audio.
 
 Map tracks to notes in firmware:
 
-- Track 0 (Kick): C1 (36)
-- Track 1 (Snare): D1 (38)
-- Track 2 (Closed Hat): F#1 (42)
-- Track 3 (Clap/Accent): A#1 (46)
-
-
+- Track 0: C1 (36)
+- Track 1: C#1 (37)
+- Track 2: D1 (38)
+- Track 3: D#1 (39)

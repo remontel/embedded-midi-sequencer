@@ -122,9 +122,9 @@ bool Sequencer_HasStepAdvanced(void);
  *
  * Default mapping:
  * - Track 0 -> 36
- * - Track 1 -> 38
- * - Track 2 -> 42
- * - Track 3 -> 46
+ * - Track 1 -> 37
+ * - Track 2 -> 38
+ * - Track 3 -> 39
  *
  * @param track Track index (0 to 3).
  *

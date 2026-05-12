@@ -126,7 +126,7 @@ bool Sequencer_HasStepAdvanced(void)
 
 uint8_t Sequencer_GetMidiNoteForTrack(uint8_t track)
 {
-    static const uint8_t midi_notes[4] = {36U, 38U, 42U, 46U};
+    static const uint8_t midi_notes[4] = {36U, 37U, 38U, 39U};
 
     if (track < 4U)
     {
