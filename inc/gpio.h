@@ -24,6 +24,12 @@ void GPIO_ProjectInit(void);
 /**
  * @brief Set a track LED ON or OFF.
  *
+ * Track-to-LED mapping in the current firmware:
+ * - track 0 -> LED3
+ * - track 1 -> LED2
+ * - track 2 -> LED1
+ * - track 3 -> LED0
+ *
  * @param track Track index (0 to 3).
  * @param on    true to turn LED on, false to turn LED off.
  */

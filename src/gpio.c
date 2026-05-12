@@ -40,26 +40,15 @@ void GPIO_SetTrackLED(uint8_t track, bool on)
         case 0:
             if (on)
             {
-                GPIOB->DATA |= LED0_MASK;
+                GPIOB->DATA |= LED3_MASK;
             }
             else
             {
-                GPIOB->DATA &= ~LED0_MASK;
+                GPIOB->DATA &= ~LED3_MASK;
             }
             break;
 
         case 1:
-            if (on)
-            {
-                GPIOB->DATA |= LED1_MASK;
-            }
-            else
-            {
-                GPIOB->DATA &= ~LED1_MASK;
-            }
-            break;
-
-        case 2:
             if (on)
             {
                 GPIOB->DATA |= LED2_MASK;
@@ -70,14 +59,25 @@ void GPIO_SetTrackLED(uint8_t track, bool on)
             }
             break;
 
-        case 3:
+        case 2:
             if (on)
             {
-                GPIOB->DATA |= LED3_MASK;
+                GPIOB->DATA |= LED1_MASK;
             }
             else
             {
-                GPIOB->DATA &= ~LED3_MASK;
+                GPIOB->DATA &= ~LED1_MASK;
+            }
+            break;
+
+        case 3:
+            if (on)
+            {
+                GPIOB->DATA |= LED0_MASK;
+            }
+            else
+            {
+                GPIOB->DATA &= ~LED0_MASK;
             }
             break;
 

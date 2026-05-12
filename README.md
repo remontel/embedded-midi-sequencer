@@ -43,6 +43,7 @@ Run on board:
 - EduBase SW3: Track 2
 - EduBase SW4: Track 3
 - EduBase SW5: Track 4
+- Track LEDs are shown in reverse order: Track 1->LED3, Track 2->LED2, Track 3->LED1, Track 4->LED0
 
 LCD legend:
 - `X`: active step
