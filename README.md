@@ -13,6 +13,8 @@ Setup to run the hardware sequencer and trigger sounds in DAW via a serial to MI
 - UART0 TX (PA1) sends MIDI bytes over USB serial
 - Python script converts serial bytes to virtual MIDI (macOS IAC)
 - DAW (Ex. Ableton) receives MIDI and triggers samples
+- `SW1` controls playback
+- `SW2` is reserved for future shift/alternate behavior
 
 
 
@@ -26,7 +28,7 @@ Setup to run the hardware sequencer and trigger sounds in DAW via a serial to MI
 ## Firmware (Keil)
 
 1. Open project in Keil
-3. Build + Flash
+2. Build + Flash
 
 Key points:
 - UART0 TX on **PA1**
@@ -35,8 +37,23 @@ Key points:
 
 Run on board:
 - SW1: Play/Stop
+- SW2: Reserved for future shift functions
 - Keypad: Toggle steps
-- SW2–SW5: Select track
+- EduBase SW5: Track 1
+- EduBase SW4: Track 2
+- EduBase SW3: Track 3
+- EduBase SW2: Track 4
+
+LCD legend:
+- `X`: active step
+- `.`: inactive step
+- `*`: current step and active
+- `-`: current step and inactive
+
+Timing model:
+- Timer0A runs as a 1 ms time base
+- Step timing is derived from BPM as a sixteenth-note interval
+- At 120 BPM, each step lasts 125 ms
 
 
 
@@ -56,7 +73,7 @@ Run on board:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install pyserial mido python-rtmidi
+pip install -r requirements.txt
 ```
 
 
@@ -65,8 +82,14 @@ pip install pyserial mido python-rtmidi
 
 Close any serial monitors first.
 
+The bridge script currently uses hard-coded values for:
+- serial port: `SERIAL_PORT`
+- MIDI destination: `MIDI_PORT`
+
+If your LaunchPad or virtual MIDI device uses different names, edit `tools/midi_bridge.py` before running it.
+
 ```bash
-python tools/midi_bridge.py
+python3 tools/midi_bridge.py
 ```
 
 You should see lines like:
@@ -79,7 +102,7 @@ MIDI: note_on channel=0 note=46 velocity=100
 
 ## Ableton Setup
 
-1. Preferences/Temp & MIDI
+1. Preferences/Tempo & MIDI
    - Enable **Track** for `IAC Driver Bus 1`
 2. Create MIDI track
 3. Set:
@@ -97,6 +120,9 @@ Press play on the sequencer and should hear audio.
 - Opening the serial port can reset the board so press SW1 again
 - If you see raw bytes but no MIDI, check system clock vs UART baud
 - Only one app can use the serial port at a time
+- EduBase buttons and keypad rows share `PD0-PD3`
+- LCD data lines and keypad columns share `PA2-PA5`
+- `SW2` shift behavior, tap tempo, and related alternate controls are future work and are not implemented in the current firmware
 
 
 
@@ -104,10 +130,9 @@ Press play on the sequencer and should hear audio.
 
 Map tracks to notes in firmware:
 
-- Track 0 (Kick): A#1 (46)
-- Track 1 (Snare): F#1 (42)
-- Track 2 (Closed Hat): D1 (38)
-- Track 3 (Open Hat): C1 (36)
-
+- Track 0 (Kick): C1 (36)
+- Track 1 (Snare): D1 (38)
+- Track 2 (Closed Hat): F#1 (42)
+- Track 3 (Clap/Accent): A#1 (46)
 
 
