@@ -2,8 +2,6 @@
 
 Setup to run the hardware sequencer and trigger sounds in DAW via a serial to MIDI bridge.
 
----
-
 
 
 ## Overview
@@ -43,7 +41,12 @@ Run on board:
 - EduBase SW3: Track 2
 - EduBase SW4: Track 3
 - EduBase SW5: Track 4
-- Track LEDs are shown in reverse order: Track 1->LED3, Track 2->LED2, Track 3->LED1, Track 4->LED0
+- Track LEDs are shown as 
+  - Track 1: LED3
+  - Track 2: LED2
+  - Track 3: LED1
+  - Track 4: LED0
+
 
 LCD legend:
 - `X`: active step
@@ -110,13 +113,24 @@ MIDI: note_on channel=0 note=46 velocity=100
    - **MIDI From**: `IAC Driver Bus 1`
    - Monitor: **IN**
 4. Add **Drum Rack**
-5. Place samples on incoming notes (e.g., 46 = A#1)
+5. Place samples on incoming notes (e.g., 36 = C1)
 
 Press play on the sequencer and should hear audio.
 
 
 
-## Notes / Tips
+## Mapping
+
+Map tracks to notes in firmware:
+
+- Track 0: C1 (36)
+- Track 1: C#1 (37)
+- Track 2: D1 (38)
+- Track 3: D#1 (39)
+
+
+
+## Notes
 
 - Opening the serial port can reset the board so press SW1 again
 - If you see raw bytes but no MIDI, check system clock vs UART baud
@@ -126,12 +140,3 @@ Press play on the sequencer and should hear audio.
 - `SW2` shift behavior, tap tempo, and related alternate controls are future work and are not implemented in the current firmware
 
 
-
-## Optional Mapping
-
-Map tracks to notes in firmware:
-
-- Track 0: C1 (36)
-- Track 1: C#1 (37)
-- Track 2: D1 (38)
-- Track 3: D#1 (39)
