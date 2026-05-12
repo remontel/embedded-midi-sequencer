@@ -32,7 +32,7 @@ def parse_midi_stream(ser, outport):
     """
     Read UART bytes forever and rebuild 3-byte MIDI messages.
 
-    UART is a byte stream, so we cannot assume every read contains one
+    UART is a byte stream. Not every read contains one
     complete MIDI message. This function buffers incoming bytes, looks for
     valid MIDI status bytes, then forwards complete Note On and Note Off
     messages to the virtual MIDI output.
@@ -53,7 +53,7 @@ def parse_midi_stream(ser, outport):
         while len(buffer) >= 3:
             status = buffer[0]
 
-            # A valid MIDI status byte always has bit 7 set.
+            # A valid MIDI status byte has bit 7 set.
             # If the first byte is not a status byte, discard it and resync.
             if (status & 0x80) == 0:
                 buffer.pop(0)

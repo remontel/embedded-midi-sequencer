@@ -1,6 +1,13 @@
 /**
  * @file sequencer.c
  * @brief Core sequencer state and logic implementation.
+ *
+ * This module owns the persistent sequencer state shared between the timer
+ * ISR and the foreground loop. In particular, Sequencer_AdvanceStep() sets
+ * a one-shot step-advanced flag in interrupt context, and the foreground
+ * loop clears that flag through Sequencer_HasStepAdvanced().
+ *
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 #include "sequencer.h"
@@ -95,6 +102,7 @@ uint8_t Sequencer_GetStepState(uint8_t track, uint8_t step)
 
 void Sequencer_AdvanceStep(void)
 {
+    // Advance one shared playback step and notify the foreground loop.
     current_step = (uint8_t)((current_step + 1U) % 16U);
     step_advanced_flag = true;
 }
@@ -106,6 +114,7 @@ uint8_t Sequencer_GetCurrentStep(void)
 
 bool Sequencer_HasStepAdvanced(void)
 {
+    // Consume the one-shot step-advanced event produced by the timer ISR.
     if (step_advanced_flag)
     {
         step_advanced_flag = false;

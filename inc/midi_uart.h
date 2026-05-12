@@ -21,6 +21,13 @@
  *   115200 baud so the LaunchPad USB debug serial connection can send raw
  *   MIDI bytes to a computer-side serial-to-MIDI bridge for Ableton Live or
  *   another MIDI receiver.
+ *
+ * Application note:
+ *   The main firmware currently sends Note On and immediate Note Off
+ *   messages for each active step, so effective note length is determined by
+ *   the receiving software rather than by a sustained firmware-held note.
+ * 
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 /**

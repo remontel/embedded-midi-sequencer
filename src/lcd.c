@@ -5,6 +5,13 @@
  * This file initializes and controls the 16x2 LCD used by the sequencer.
  * It provides helper functions for writing characters and strings and for
  * displaying the current sequencer pattern and playback position.
+ *
+ * Note:
+ * PA2-PA5 are shared with the keypad column wiring on this hardware.
+ * The firmware relies on cooperative access patterns between the LCD and
+ * keypad modules rather than dedicated pins for each interface.
+ *
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 #include "TM4C123GH6PM.h"
@@ -27,28 +34,28 @@
 
 void LCD_Ports_Init(void)
 {
-    /* Enable clocks for Port A, C, and E */
+    // Enable clocks for Port A, C, and E
     SYSCTL->RCGCGPIO |= 0x15;
 
-    /* PA2-PA5 = LCD data pins */
+    // PA2-PA5 = LCD data pins
     GPIOA->DIR |= LCD_DATA_MASK;
     GPIOA->AFSEL &= ~LCD_DATA_MASK;
     GPIOA->DEN |= LCD_DATA_MASK;
     GPIOA->AMSEL &= ~LCD_DATA_MASK;
 
-    /* PC6 = LCD Enable */
+    // PC6 = LCD Enable
     GPIOC->DIR |= LCD_E_MASK;
     GPIOC->AFSEL &= ~LCD_E_MASK;
     GPIOC->DEN |= LCD_E_MASK;
     GPIOC->AMSEL &= ~LCD_E_MASK;
 
-    /* PE0 = LCD RS */
+    // PE0 = LCD RS
     GPIOE->DIR |= LCD_RS_MASK;
     GPIOE->AFSEL &= ~LCD_RS_MASK;
     GPIOE->DEN |= LCD_RS_MASK;
     GPIOE->AMSEL &= ~LCD_RS_MASK;
 
-    /* Start with control lines low */
+    // Start with control lines low
     GPIOC->DATA &= ~LCD_E_MASK;
     GPIOE->DATA &= ~LCD_RS_MASK;
 }
@@ -103,7 +110,7 @@ void LCD_Init(void)
 
     GPIOE->DATA &= ~LCD_RS_MASK;
 
-    /* Initialize LCD into 4-bit mode */
+    // Initialize LCD into 4-bit mode
     LCD_Write_4_Bits(0x03);
     SysTick_Delay1ms(5);
 
@@ -116,16 +123,16 @@ void LCD_Init(void)
     LCD_Write_4_Bits(0x02);
     SysTick_Delay1us(200);
 
-    /* Function set: 4-bit, 2-line, 5x8 font */
+    // Function set: 4-bit, 2-line, 5x8 font
     LCD_Send_Command(0x28);
 
-    /* Display on, cursor off, blink off */
+    // Display on, cursor off, blink off
     LCD_Send_Command(0x0C);
 
-    /* Entry mode: increment, no shift */
+    // Entry mode: increment, no shift
     LCD_Send_Command(0x06);
 
-    /* Clear display */
+    // Clear display
     LCD_Send_Command(0x01);
 }
 
@@ -169,7 +176,7 @@ void LCD_DisplayTrackSteps(uint8_t track, uint8_t current_step)
     uint8_t step;
     char c;
 
-    /* Row 0: steps 0 to 7 */
+    // Row 0: steps 0 to 7
     LCD_SetCursor(0U, 0U);
     for (step = 0U; step < 8U; step++)
     {
@@ -198,7 +205,7 @@ void LCD_DisplayTrackSteps(uint8_t track, uint8_t current_step)
         LCD_WriteChar(' ');
     }
 
-    /* Row 1: steps 8 to 15 */
+    // Row 1: steps 8 to 15
     LCD_SetCursor(1U, 0U);
     for (step = 8U; step < 16U; step++)
     {

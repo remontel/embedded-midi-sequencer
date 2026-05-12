@@ -10,6 +10,8 @@
  *
  * Pin used:
  *   PA1 = UART0 TX
+ * 
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 #include "TM4C123GH6PM.h"
@@ -85,8 +87,8 @@ static void MIDI_UART_SetBaudRate(uint32_t baud_rate)
 
 void MIDI_UART_SendByte(uint8_t data)
 {
-     // Wait while UART transmit FIFO is full.
-     // UARTFR bit 5 = TXFF.
+    // Wait while UART transmit FIFO is full.
+    // UARTFR bit 5 = TXFF.
     while ((UART0->FR & 0x20) != 0U)
     {
     }

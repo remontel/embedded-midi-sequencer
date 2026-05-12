@@ -10,6 +10,14 @@
  * This module initializes and controls the 16x2 LCD used by the project.
  * It provides low-level cursor and character functions as well as a
  * higher-level helper to display the selected track's step pattern.
+ *
+ * Display legend used by LCD_DisplayTrackSteps():
+ * - 'X' = active step
+ * - '.' = inactive step
+ * - '*' = current step and active
+ * - '-' = current step and inactive
+ * 
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 /**
@@ -47,8 +55,8 @@ void LCD_WriteString(const char *str);
 /**
  * @brief Display the selected track's 16-step pattern.
  *
- * This function is intended as the main MVP display helper.
- * It should show active/inactive steps and indicate the current step.
+ * This function renders steps 0-7 on row 0 and steps 8-15 on row 1 using
+ * the symbol legend documented above.
  *
  * @param track        Currently selected track index.
  * @param current_step Current playback step index.

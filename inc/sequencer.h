@@ -12,6 +12,8 @@
  * sequencer. It provides functions for tempo control, playback state,
  * track selection, step editing, step advancement, and track-to-MIDI-note
  * mapping.
+ * 
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 /**

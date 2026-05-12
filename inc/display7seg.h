@@ -9,6 +9,12 @@
  *
  * This module controls the 4-digit 7-segment display used to show
  * the current tempo value in BPM.
+ *
+ * The display is refreshed by multiplexing one digit at a time, so
+ * Display7Seg_ShowNumber() must be called repeatedly from the foreground
+ * loop to maintain a stable visible output.
+ * 
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 /**
@@ -18,6 +24,9 @@ void Display7Seg_Init(void);
 
 /**
  * @brief Display a numeric value on the 7-segment display.
+ *
+ * Performs one multiplexing pass across the four digits. Values above 9999
+ * are clamped before display.
  *
  * @param value Value to display.
  */

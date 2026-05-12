@@ -4,6 +4,12 @@
  *
  * This file controls the 4-digit 7-segment display and provides functions
  * for showing the current tempo value in BPM.
+ *
+ * The display is multiplexed in software. Each call to
+ * Display7Seg_ShowNumber() updates all four digits once, so the foreground
+ * loop must call it continuously to keep the display lit.
+ *
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 #include "TM4C123GH6PM.h"
@@ -12,22 +18,22 @@
 
 const uint8_t number_pattern[16] =
 {
-    0xC0, /* 0 */
-    0xF9, /* 1 */
-    0xA4, /* 2 */
-    0xB0, /* 3 */
-    0x99, /* 4 */
-    0x92, /* 5 */
-    0x82, /* 6 */
-    0xF8, /* 7 */
-    0x80, /* 8 */
-    0x98, /* 9 */
-    0x88, /* A */
-    0x83, /* B */
-    0xC6, /* C */
-    0xA1, /* D */
-    0x86, /* E */
-    0x8E  /* F */
+    0xC0, // 0
+    0xF9, // 1
+    0xA4, // 2
+    0xB0, // 3
+    0x99, // 4
+    0x92, // 5
+    0x82, // 6
+    0xF8, // 7
+    0x80, // 8
+    0x98, // 9
+    0x88, // A
+    0x83, // B
+    0xC6, // C
+    0xA1, // D
+    0x86, // E
+    0x8E  // F
 };
 
 void SSI2_Write(uint8_t data)
@@ -48,14 +54,14 @@ void Display7Seg_Init(void)
     SYSCTL->RCGCGPIO |= 0x02;
     SYSCTL->RCGCGPIO |= 0x04;
 
-    /* PB4 = SSI2Clk, PB7 = SSI2Tx */
+    // PB4 = SSI2Clk, PB7 = SSI2Tx
     GPIOB->AFSEL |= 0x90;
     GPIOB->PCTL &= ~0xF00F0000;
     GPIOB->PCTL |= 0x20020000;
     GPIOB->DEN |= 0x90;
     GPIOB->AMSEL &= ~0x90;
 
-    /* PC7 = slave select */
+    // PC7 = slave select
     GPIOC->DIR |= 0x80;
     GPIOC->AFSEL &= ~0x80;
     GPIOC->DEN |= 0x80;
@@ -66,10 +72,10 @@ void Display7Seg_Init(void)
     SSI2->CR1 &= ~0x01;
     SSI2->CR1 &= ~0x04;
 
-    /* Use PIOSC */
+    // Use PIOSC
     SSI2->CC = 0x05;
 
-    /* 16 MHz / 16 = 1 MHz */
+    // 16 MHz / 16 = 1 MHz
     SSI2->CPSR = 16;
     SSI2->CR0 &= ~0xFF00;
 

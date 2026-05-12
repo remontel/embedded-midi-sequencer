@@ -1,6 +1,12 @@
 /**
  * @file timer_seq.c
  * @brief Hardware timer implementation for sequencer timing.
+ *
+ * Timer0A is configured as a fixed 1 ms periodic interrupt source.
+ * The ISR accumulates elapsed milliseconds and advances the sequencer
+ * once the BPM-derived sixteenth-note interval has expired.
+ *
+ * @author Ignacio Martinez-Laparra, Rene Montelongo
  */
 
 #include "TM4C123GH6PM.h"
@@ -12,35 +18,35 @@ uint32_t timer_step_period_ms = 125;
 
 void TimerSeq_Init(uint16_t bpm)
 {
-    /* Enable clock for Timer0 */
+    // Enable clock for Timer0 
     SYSCTL->RCGCTIMER |= 0x01;
 
-    /* Disable Timer0A before configuration */
+    // Disable Timer0A before configuration
     TIMER0->CTL &= ~0x01;
 
-    /* 16-bit timer configuration */
+    // 16-bit timer configuration
     TIMER0->CFG = 0x04;
 
-    /* Periodic mode */
+    // Periodic mode
     TIMER0->TAMR = 0x02;
 
-    /* Prescale 50 MHz to 1 MHz */
+    // Prescale 50 MHz to 1 MHz
     TIMER0->TAPR = 50 - 1;
 
-    /* 1 ms interval at 1 MHz */
+    // 1 ms interval at 1 MHz
     TIMER0->TAILR = 1000 - 1;
 
-    /* Clear timeout flag */
+    // Clear timeout flag
     TIMER0->ICR = 0x01;
 
-    /* Enable timeout interrupt */
+    // Enable timeout interrupt
     TIMER0->IMR |= 0x01;
 
-    /* Set priority 2 for Timer0A (IRQ 19) */
+    // Set priority 2 for Timer0A (IRQ 19)
     NVIC->IPR[4] &= ~0xE0000000;
     NVIC->IPR[4] |= (2 << 29);
 
-    /* Enable IRQ 19 */
+    // Enable IRQ 19
     NVIC->ISER[0] |= (1 << 19);
 
     TimerSeq_UpdatePeriod(bpm);
@@ -54,7 +60,7 @@ void TimerSeq_UpdatePeriod(uint16_t bpm)
         bpm = 120U;
     }
 
-    /* sixteenth-note period in ms */
+    // sixteenth-note period in ms
     timer_step_period_ms = 60000U / (4U * bpm);
 
     if (timer_step_period_ms == 0U)
@@ -78,13 +84,15 @@ void TimerSeq_Stop(void)
 
 void TIMER0A_Handler(void)
 {
-    /* Clear timeout interrupt flag */
+    // Clear timeout interrupt flag
     TIMER0->ICR = 0x01;
 
+    // Only accumulate time while the sequencer is in the playing state.
     if (Sequencer_IsPlaying())
     {
         timer_ms_elapsed++;
 
+        // The foreground loop consumes the resulting step-advanced event.
         if (timer_ms_elapsed >= timer_step_period_ms)
         {
             timer_ms_elapsed = 0;
