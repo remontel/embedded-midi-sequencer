@@ -17,7 +17,12 @@ Setup to run the hardware sequencer and trigger sounds in DAW via a serial to MI
 ## Hardware
 
 - TM4C123G LaunchPad (USB to Mac)
+
 - EduBase V2 board (buttons, keypad, LCD, LEDs)
+
+  
+
+<img src="./assets/EduBase-V2_Tiva-100.jpg" alt="EduBase V2 board" style="zoom:50%;" />
 
 
 
@@ -136,5 +141,4 @@ Map tracks to notes in firmware:
 - EduBase buttons and keypad rows share `PD0-PD3`
 - LCD data lines and keypad columns share `PA2-PA5`
 - `SW2` shift behavior, tap tempo, and related alternate controls are future work and are not implemented in the current firmware
-
 
