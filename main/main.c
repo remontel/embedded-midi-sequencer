@@ -11,7 +11,7 @@
  * Current control mapping in the implemented firmware:
  * - Tiva SW1 toggles playback
  * - Tiva SW2 is reserved for future shift/alternate behavior
- * - EduBase SW5-SW2 select tracks 1-4
+ * - EduBase SW2-SW5 select tracks 1-4
  * - Keypad K0-K15 toggle steps for the selected track
  */
 
@@ -81,7 +81,7 @@ int main(void)
         // Track selection
         if (Buttons_WasEduBaseSW5Pressed())
         {
-            Sequencer_SelectTrack(0U);
+            Sequencer_SelectTrack(3U);
             GPIO_ClearAllTrackLEDs();
             GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
             LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
@@ -89,7 +89,7 @@ int main(void)
 
         if (Buttons_WasEduBaseSW4Pressed())
         {
-            Sequencer_SelectTrack(1U);
+            Sequencer_SelectTrack(2U);
             GPIO_ClearAllTrackLEDs();
             GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
             LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
@@ -97,7 +97,7 @@ int main(void)
 
         if (Buttons_WasEduBaseSW3Pressed())
         {
-            Sequencer_SelectTrack(2U);
+            Sequencer_SelectTrack(1U);
             GPIO_ClearAllTrackLEDs();
             GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
             LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
@@ -105,7 +105,7 @@ int main(void)
 
         if (Buttons_WasEduBaseSW2Pressed())
         {
-            Sequencer_SelectTrack(3U);
+            Sequencer_SelectTrack(0U);
             GPIO_ClearAllTrackLEDs();
             GPIO_SetTrackLED(Sequencer_GetCurrentTrack(), true);
             LCD_DisplayTrackSteps(Sequencer_GetCurrentTrack(), Sequencer_GetCurrentStep());
